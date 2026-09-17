@@ -88,7 +88,7 @@ def locate_puzzle_offset(background: np.ndarray, piece: np.ndarray) -> Match:
 
     best = _best_template_match(bg_edges, gap_edges, "canny")
     alt = _best_template_match(bg, gap_gray, "gray")
-    if alt.confidence > best.confidence:
+    if alt.confidence >= best.confidence:
         best = alt
     return best
 

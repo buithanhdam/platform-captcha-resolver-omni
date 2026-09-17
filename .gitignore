@@ -203,6 +203,13 @@ cython_debug/
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
 
+# Captcha resolver runtime artifacts
+logs/
+data/
+sessions/
+credentials/
+captcha_temp/
+
 # Ruff stuff:
 .ruff_cache/
 
@@ -217,3 +224,6 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 .kilo
+captcha_debug
+*.png
+*.html

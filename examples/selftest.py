@@ -11,22 +11,26 @@ def build_synthetic_slider(hole_x: int = 150) -> tuple[object, object, int]:
     import cv2
     import numpy as np
 
+    def make_patch() -> np.ndarray:
+        patch = np.full((50, 50, 3), 200, dtype=np.uint8)
+        cv2.rectangle(patch, (5, 5), (44, 44), (80, 80, 210), -1)
+        cv2.circle(patch, (24, 24), 12, (30, 160, 90), 3)
+        cv2.line(patch, (5, 40), (44, 8), (220, 90, 40), 4)
+        return patch
+
+    patch = make_patch()
     bg = np.full((200, 400, 3), 235, dtype=np.uint8)
     for i in range(0, 200, 12):
         cv2.line(bg, (0, i), (399, i + 60), (180, 180, 182), 1)
-    cv2.rectangle(bg, (hole_x, 70), (hole_x + 50, 120), (110, 110, 112), -1)
-
-    piece = np.full((50, 50, 3), 255, dtype=np.uint8)
-    cv2.rectangle(piece, (0, 0), (49, 49), (110, 110, 112), -1)
-    cv2.rectangle(piece, (2, 2), (47, 47), (200, 200, 200), 1)
-    return bg, piece, hole_x
+    bg[70:120, hole_x : hole_x + 50] = patch
+    return bg, patch.copy(), hole_x
 
 
 def test_puzzle_slider() -> None:
     bg, piece, expected = build_synthetic_slider(hole_x=150)
     match = vision.locate_puzzle_offset(bg, piece)
     assert abs(match.x - expected) < 6, f"expected ~{expected}, got {match.x}"
-    assert match.confidence > 0.5, f"confidence too low: {match.confidence}"
+    assert match.confidence > 0.6, f"confidence too low: {match.confidence}"
     print(f"[puzzle_slider] OK x={match.x:.1f} conf={match.confidence:.3f} ({match.method})")
 
 
